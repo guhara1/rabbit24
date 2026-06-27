@@ -3,7 +3,8 @@ import re
 
 from . import main, areas, stations, areas_and_stations, info, hubs, sudogwon
 
-_BODIES = os.path.join(os.path.dirname(__file__), "bodies")
+# 안산 확장 본문은 수도권 본문과 슬러그가 겹치지 않도록 bodies/ansan/ 에 둔다.
+_BODIES = os.path.join(os.path.dirname(__file__), "bodies", "ansan")
 
 # 안산 페이지를 경기 하위(/gyeonggi/ansan/)로 재배치(rehome)한다.
 # 소스 모듈은 그대로 두고, 조립 시점에 경로·내부링크·브레드크럼만 변환한다.
