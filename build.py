@@ -390,6 +390,7 @@ def render_page(page: dict) -> str:
         <li><a href="/policy/privacy/">개인정보처리방침</a></li>
         <li><a href="/policy/terms/">고객 유의사항</a></li>
         <li><a href="/policy/content-quality/">콘텐츠 품질 기준</a></li>
+        <li><a href="/policy/sitemap/">사이트맵</a></li>
       </ul>
     </nav>
   </div>
@@ -437,6 +438,48 @@ def body_override(path: str) -> str | None:
     return None
 
 
+def _page_label(page: dict) -> str:
+    crumbs = page.get("breadcrumb") or []
+    if crumbs and crumbs[-1][0]:
+        return crumbs[-1][0]
+    return re.sub(r"<[^>]+>", "", page.get("h1", "")).strip()
+
+
+def make_html_sitemap(pages) -> str:
+    """전체 페이지를 섹션별로 묶은 사람용 HTML 사이트맵 본문을 생성한다."""
+    groups = [
+        ("지역 선택", "find/", lambda p: p.startswith("find/")),
+        ("이용 상황", "use/", lambda p: p.startswith("use/")),
+        ("서울", "seoul/", lambda p: p.startswith("seoul/")),
+        ("경기", "gyeonggi/", lambda p: p.startswith("gyeonggi/") and not p.startswith("gyeonggi/ansan/")),
+        ("인천", "incheon/", lambda p: p.startswith("incheon/")),
+        ("안산(경기)", "gyeonggi/ansan/", lambda p: p.startswith("gyeonggi/ansan/")),
+        ("예약 전 확인", "check/", lambda p: p.startswith("check/")),
+        ("운영 기준", "policy/", lambda p: p.startswith("policy/")),
+    ]
+    out = [
+        '<section><h2>토끼24 마사지 사이트맵</h2>',
+        '<p>서울·경기·인천 수도권 출장마사지·홈타이 안내의 전체 페이지를 섹션별로 정리했습니다. '
+        '찾으시는 지역이나 이용 안내로 바로 이동하세요. 지역 선택은 '
+        '<a href="/find/">지역 선택</a>, 이용 상황별 안내는 <a href="/use/">이용 상황</a>에서도 확인할 수 있습니다.</p></section>',
+    ]
+    used = set()
+    for title, _pref, match in groups:
+        items = []
+        for p in pages:
+            path = p["path"]
+            if not path or path in used:
+                continue
+            if match(path):
+                used.add(path)
+                items.append((path, _page_label(p)))
+        if not items:
+            continue
+        lis = "".join(f'<li><a href="/{path}">{html.escape(label)}</a></li>' for path, label in items)
+        out.append(f'<section><h2>{title}</h2><ul>{lis}</ul></section>')
+    return "\n".join(out)
+
+
 def build() -> None:
     report = []
     sitemap_urls = []
@@ -444,8 +487,13 @@ def build() -> None:
     # public 디렉터리가 없으면 생성
     os.makedirs(PUBLIC_DIR, exist_ok=True)
 
+    html_sitemap_body = make_html_sitemap(PAGES)
+
     for page in PAGES:
         path = page["path"]
+        # HTML 사이트맵 페이지는 전체 페이지 목록으로 본문을 자동 생성한다.
+        if path == "policy/sitemap/":
+            page["body"] = html_sitemap_body
         # 확장 본문 파일이 있으면 인라인 본문 대신 사용한다.
         ov = body_override(path)
         if ov is not None:
