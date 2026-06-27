@@ -127,7 +127,7 @@ def make_image_object() -> dict:
         "contentUrl": base + "/assets/og-image.png",
         "width": 1200,
         "height": 630,
-        "caption": BRAND + " 안산 출장마사지·홈타이 안내",
+        "caption": BRAND + " 서울·경기·인천 출장마사지·홈타이 안내",
     }
 
 
@@ -144,7 +144,7 @@ def make_org_schema() -> dict:
         "image": {"@id": base + "/#primaryimage"},
         "telephone": PHONE,
         "sameAs": ["https://t.me/googleseolab"],
-        "areaServed": {"@type": "AdministrativeArea", "name": "경기도 안산시"},
+        "areaServed": [{"@type": "City", "name": "서울특별시"}, {"@type": "AdministrativeArea", "name": "경기도"}, {"@type": "City", "name": "인천광역시"}],
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": PHONE,
@@ -178,7 +178,7 @@ def make_service_schema() -> dict:
         "@id": base + "/#service",
         "serviceType": "출장마사지·홈타이 방문 관리",
         "provider": {"@id": base + "/#organization"},
-        "areaServed": {"@type": "AdministrativeArea", "name": "경기도 안산시"},
+        "areaServed": [{"@type": "City", "name": "서울특별시"}, {"@type": "AdministrativeArea", "name": "경기도"}, {"@type": "City", "name": "인천광역시"}],
         "availableChannel": {
             "@type": "ServiceChannel",
             "servicePhone": {"@type": "ContactPoint", "telephone": PHONE},
@@ -336,7 +336,7 @@ def render_page(page: dict) -> str:
   <div class="header-top">
     <div class="header-inner">
       <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">토</span> <span class="brand-text">{BRAND}</span></a>
-      <p class="header-tagline"><span class="tag-gem">◆</span> 안산시 전지역 방문 관리 <span class="tag-gem">◆</span> 24시간 상담</p>
+      <p class="header-tagline"><span class="tag-gem">◆</span> 서울·경기·인천 전지역 방문 관리 <span class="tag-gem">◆</span> 24시간 상담</p>
       <a class="header-call" href="tel:{PHONE}"><span class="call-label">예약전화</span> {PHONE_DISPLAY}</a>
       <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
@@ -359,36 +359,37 @@ def render_page(page: dict) -> str:
   <div class="container footer-grid">
     <div class="footer-col footer-about">
       <p class="footer-brand">{BRAND}</p>
-      <p class="footer-desc">안산시 전지역 방문 출장마사지·홈타이 안내 사이트입니다. 모든 서비스는 안내된 관리 범위와 위생·안전 기준 안에서만 제공됩니다.</p>
+      <p class="footer-desc">서울·경기·인천 수도권 전지역 방문 출장마사지·홈타이 안내 사이트입니다. 모든 서비스는 안내된 관리 범위와 위생·안전 기준 안에서만 제공됩니다.</p>
       <address class="footer-contact">
         <span class="footer-contact-row"><span class="footer-label">예약전화</span> <a href="tel:{PHONE}">{PHONE_DISPLAY}</a></span>
         <span class="footer-contact-row"><span class="footer-label">상담시간</span> 연중무휴 24시간</span>
-        <span class="footer-contact-row"><span class="footer-label">서비스 지역</span> 경기도 안산시 전지역</span>
+        <span class="footer-contact-row"><span class="footer-label">서비스 지역</span> 서울·경기·인천 수도권 전지역</span>
       </address>
     </div>
-    <nav class="footer-col" aria-label="서비스 안내">
-      <p class="footer-title">서비스</p>
+    <nav class="footer-col" aria-label="지역 안내">
+      <p class="footer-title">지역</p>
       <ul>
-        <li><a href="/">안산 출장마사지</a></li>
-        <li><a href="/sangnok-gu/">구별 안내</a></li>
-        <li><a href="/danwon-gu/jungang-dong/">지역별 안내</a></li>
-        <li><a href="/station/sangnoksu-station/">역세권 안내</a></li>
-        <li><a href="/area/jungang-gojan/">생활권 안내</a></li>
+        <li><a href="/find/">지역 선택</a></li>
+        <li><a href="/seoul/">서울 출장마사지</a></li>
+        <li><a href="/gyeonggi/">경기 출장마사지</a></li>
+        <li><a href="/incheon/">인천 출장마사지</a></li>
+        <li><a href="/find/station/">지하철역 기준</a></li>
       </ul>
     </nav>
     <nav class="footer-col" aria-label="이용 안내">
       <p class="footer-title">이용 안내</p>
       <ul>
-        <li><a href="/reservation/">예약안내</a></li>
-        <li><a href="/check/">이용 전 확인사항</a></li>
-        <li><a href="/support/">고객센터</a></li>
+        <li><a href="/use/">이용 상황별 안내</a></li>
+        <li><a href="/check/">예약 전 확인</a></li>
+        <li><a href="/policy/contact/">문의하기</a></li>
       </ul>
     </nav>
     <nav class="footer-col" aria-label="정책 및 기준">
       <p class="footer-title">정책</p>
       <ul>
-        <li><a href="/support/privacy/">개인정보처리방침</a></li>
-        <li><a href="https://t.me/googleseolab" target="_blank" rel="noopener nofollow">문의하기</a></li>
+        <li><a href="/policy/privacy/">개인정보처리방침</a></li>
+        <li><a href="/policy/terms/">고객 유의사항</a></li>
+        <li><a href="/policy/content-quality/">콘텐츠 품질 기준</a></li>
       </ul>
     </nav>
   </div>
