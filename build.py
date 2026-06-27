@@ -225,6 +225,33 @@ def make_webpage_schema(title: str, desc: str, canonical: str) -> dict:
     }
 
 
+def make_faqpage_schema(body: str):
+    """본문의 <dl class="faq-list"> 에서 dt/dd 쌍을 추출해 FAQPage 스키마를 만든다.
+    FAQ가 없으면 None을 반환한다."""
+    m = re.search(r'<dl class="faq-list">(.*?)</dl>', body, flags=re.S)
+    if not m:
+        return None
+    pairs = re.findall(r"<dt[^>]*>(.*?)</dt>\s*<dd>(.*?)</dd>", m.group(1), flags=re.S)
+    if not pairs:
+        return None
+
+    def clean(s):
+        return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", s))).strip()
+
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": clean(q),
+                "acceptedAnswer": {"@type": "Answer", "text": clean(a)},
+            }
+            for q, a in pairs
+        ],
+    }
+
+
 def render_page(page: dict) -> str:
     path = page["path"]
     title = page["title"]
@@ -268,6 +295,9 @@ def render_page(page: dict) -> str:
         blocks = common + [make_webpage_schema(title, desc, canonical)]
         if crumbs:
             blocks.append(make_breadcrumb_schema(crumbs))
+        faq_schema = make_faqpage_schema(body)
+        if faq_schema:
+            blocks.append(faq_schema)
         auto_schema = "".join(_ld(b) for b in blocks)
 
     return f"""<!DOCTYPE html>
@@ -390,6 +420,22 @@ def render_page(page: dict) -> str:
 """
 
 
+BODIES_DIR = os.path.join(ROOT, "content", "bodies")
+
+
+def body_override(path: str) -> str | None:
+    """content/bodies/<slug>.html 가 있으면 해당 본문으로 교체한다.
+    slug 규칙: 경로의 '/'를 '__'로, 끝 슬래시 제거. 빈 경로(메인)는 제외."""
+    if not path:
+        return None
+    slug = path.rstrip("/").replace("/", "__")
+    fp = os.path.join(BODIES_DIR, slug + ".html")
+    if os.path.exists(fp):
+        with open(fp, encoding="utf-8") as f:
+            return f.read()
+    return None
+
+
 def build() -> None:
     report = []
     sitemap_urls = []
@@ -399,6 +445,10 @@ def build() -> None:
 
     for page in PAGES:
         path = page["path"]
+        # 확장 본문 파일이 있으면 인라인 본문 대신 사용한다.
+        ov = body_override(path)
+        if ov is not None:
+            page["body"] = ov
         out_dir = os.path.join(PUBLIC_DIR, path)
         os.makedirs(out_dir, exist_ok=True)
         html_out = render_page(page)

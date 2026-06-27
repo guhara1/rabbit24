@@ -579,7 +579,7 @@ wolpi_dong = create_area_page(
 
 <section>
 <h2>인접 지역</h2>
-<p><a href="/sangnok-gu/seongu-dong/">성포동</a> 등 인접 지역과 함께 확인하세요.</p>
+<p><a href="/danwon-gu/seongu-dong/">성포동</a> 등 인접 지역과 함께 확인하세요.</p>
 </section>
 
 <section>
