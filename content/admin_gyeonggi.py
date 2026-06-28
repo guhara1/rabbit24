@@ -1,6 +1,7 @@
 # 경기 시 → (일반구) → 동 드릴다운. 구가 있는 시는 시>구>동, 없는 시는 시>동.
 # 번호동 통합. 핵심 동은 빌드 오버레이로 풍부 본문 색인, 나머지는 자동 noindex(도어웨이 회피).
 from .sudogwon import P
+from .titles import make_title, make_desc
 
 # 구가 있는 시: city_slug -> (city_name, {gu_slug: (gu_name, [(dong_slug,dong_name)])})
 GU_CITIES = {
@@ -206,10 +207,11 @@ for cs, (cn, gus) in GU_CITIES.items():
     for gslug, (gn, dongs) in gus.items():
         base = f"/gyeonggi/{cs}/{gslug}/"
         for ds, dn in dongs:
+            _p = f"gyeonggi/{cs}/{gslug}/{ds}/"
             PAGES.append(P(
-                f"gyeonggi/{cs}/{gslug}/{ds}/",
-                f"{dn} 출장마사지｜{cn} {gn} {dn} 안내",
-                f"{cn} {gn} {dn} 출장마사지·홈타이 예약 전 생활권과 이용 기준을 확인하세요.",
+                _p,
+                make_title(dn, f"{cn} {gn}", _p),
+                make_desc(f"{cn} {gn} {dn}", _p),
                 f"{cn} {gn} {dn} 출장마사지·홈타이 안내",
                 [("경기", "/gyeonggi/"), (cn, f"/gyeonggi/{cs}/"), (gn, base), (dn, "")],
                 body=_body(dn, f"{cn} {gn}", base, base, [(s, n) for s, n in dongs if s != ds][:10]),
@@ -218,10 +220,11 @@ for cs, (cn, gus) in GU_CITIES.items():
 for cs, (cn, dongs) in CITY_DONGS.items():
     base = f"/gyeonggi/{cs}/"
     for ds, dn in dongs:
+        _p = f"gyeonggi/{cs}/{ds}/"
         PAGES.append(P(
-            f"gyeonggi/{cs}/{ds}/",
-            f"{dn} 출장마사지｜{cn} {dn} 안내",
-            f"{cn} {dn} 출장마사지·홈타이 예약 전 생활권과 이용 기준을 확인하세요.",
+            _p,
+            make_title(dn, cn, _p),
+            make_desc(f"{cn} {dn}", _p),
             f"{cn} {dn} 출장마사지·홈타이 안내",
             [("경기", "/gyeonggi/"), (cn, f"/gyeonggi/{cs}/"), (dn, "")],
             body=_body(dn, cn, base, base, [(s, n) for s, n in dongs if s != ds][:10]),

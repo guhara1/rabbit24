@@ -3,6 +3,7 @@
 # (검색 비노출·내부 탐색용) → 도어웨이(색인 대량 저가치 페이지) 위험 회피.
 # 핵심 동(content/bodies/seoul__<구>__<동>.html 존재)은 빌드 오버레이로 풍부한 본문 적용.
 from .sudogwon import P
+from .titles import make_title, make_desc
 
 # 구 slug: (구 이름, [(동 slug, 동 이름), ...])  — 통합 행정동
 SEOUL = {
@@ -178,10 +179,11 @@ def _dong_list_section(gu_slug, gu_name, dongs):
 PAGES = []
 for _gu_slug, (_gu_name, _dongs) in SEOUL.items():
     for _ds, _dn in _dongs:
+        _p = f"seoul/{_gu_slug}/{_ds}/"
         PAGES.append(P(
-            f"seoul/{_gu_slug}/{_ds}/",
-            f"{_dn} 출장마사지｜서울 {_gu_name} {_dn} 안내",
-            f"서울 {_gu_name} {_dn} 출장마사지·홈타이 예약 전 생활권과 이용 기준을 확인하세요.",
+            _p,
+            make_title(_dn, f"서울 {_gu_name}", _p),
+            make_desc(f"서울 {_gu_name} {_dn}", _p),
             f"서울 {_gu_name} {_dn} 출장마사지·홈타이 안내",
             [("서울", "/seoul/"), (_gu_name, f"/seoul/{_gu_slug}/"), (_dn, "")],
             body=_dong_body(_gu_slug, _gu_name, _ds, _dn, _dongs),

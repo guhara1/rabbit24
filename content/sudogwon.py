@@ -309,11 +309,13 @@ _region_hubs = [
 
 
 # ───────────────────────── 대표 생활권 24 ─────────────────────────
-def _life(region_label, region_path, slug, name, desc):
+def _life(region_label, region_path, slug, name, desc=None):
+    from .titles import make_title, make_desc
+    _p = f"{region_path}life/{slug}/"
     return P(
-        f"{region_path}life/{slug}/",
-        f"{name} 출장마사지｜{region_label} 생활권 홈타이 안내",
-        desc,
+        _p,
+        make_title(name, f"{region_label} 생활권", _p),
+        make_desc(f"{region_label} {name}", _p),
         f"{name} 출장마사지·홈타이 안내",
         [(region_label, f"/{region_path}"), (name, "")],
     )

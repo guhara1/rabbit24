@@ -1,5 +1,6 @@
 # 인천 현행 구·군 페이지 (1차-B).
 from .sudogwon import P
+from .titles import make_title, make_desc
 
 INCHEON_GUGUN = [
     ("jung-gu", "중구", "중앙동·신포·영종"),
@@ -17,8 +18,8 @@ INCHEON_GUGUN = [
 PAGES = [
     P(
         f"incheon/{slug}/",
-        f"{name} 출장마사지｜인천 {name} {areas} 생활권 안내",
-        f"인천 {name} 출장마사지·홈타이 예약 전 {areas} 생활권과 이용 기준을 확인하세요.",
+        make_title(name, "인천", f"incheon/{slug}/"),
+        make_desc(f"인천 {name}", f"incheon/{slug}/"),
         f"인천 {name} 출장마사지·홈타이 안내",
         [("인천", "/incheon/"), (name, "")],
     )

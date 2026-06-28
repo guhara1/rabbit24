@@ -1,6 +1,7 @@
 # 경기 일반구 페이지 (1차-B). 구를 둔 시: 수원·성남·용인·고양·안양.
 # (부천·화성·평택은 일반구 없음, 안산은 /gyeonggi/ansan/ 로 운영)
 from .sudogwon import P
+from .titles import make_title, make_desc
 
 # (city_slug, city_name, gu_slug, gu_name, 대표 생활권)
 GYEONGGI_GU = [
@@ -24,8 +25,8 @@ GYEONGGI_GU = [
 PAGES = [
     P(
         f"gyeonggi/{city_slug}/{gu_slug}/",
-        f"{city_name} {gu_name} 출장마사지｜{areas} 생활권 안내",
-        f"{city_name} {gu_name} 출장마사지·홈타이 예약 전 {areas} 생활권과 이용 기준을 확인하세요.",
+        make_title(f"{city_name} {gu_name}", "경기", f"gyeonggi/{city_slug}/{gu_slug}/"),
+        make_desc(f"{city_name} {gu_name}", f"gyeonggi/{city_slug}/{gu_slug}/"),
         f"{city_name} {gu_name} 출장마사지·홈타이 안내",
         [("경기", "/gyeonggi/"), (city_name, f"/gyeonggi/{city_slug}/"), (gu_name, "")],
     )

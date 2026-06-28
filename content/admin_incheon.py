@@ -2,6 +2,7 @@
 # 핵심 지역(content/bodies/incheon__<구>__<동>.html)은 빌드 오버레이로 풍부한 본문 적용,
 # 나머지는 얇은 본문 → 자동 noindex(도어웨이 회피).
 from .sudogwon import P
+from .titles import make_title, make_desc
 
 INCHEON = {
     "jung-gu": ("중구", [
@@ -89,10 +90,11 @@ def _area_list_section(gu_slug, gu_name, areas):
 PAGES = []
 for _gs, (_gn, _areas) in INCHEON.items():
     for _as, _an in _areas:
+        _p = f"incheon/{_gs}/{_as}/"
         PAGES.append(P(
-            f"incheon/{_gs}/{_as}/",
-            f"{_an} 출장마사지｜인천 {_gn} {_an} 안내",
-            f"인천 {_gn} {_an} 출장마사지·홈타이 예약 전 생활권과 이용 기준을 확인하세요.",
+            _p,
+            make_title(_an, f"인천 {_gn}", _p),
+            make_desc(f"인천 {_gn} {_an}", _p),
             f"인천 {_gn} {_an} 출장마사지·홈타이 안내",
             [("인천", "/incheon/"), (_gn, f"/incheon/{_gs}/"), (_an, "")],
             body=_area_body(_gs, _gn, _as, _an, _areas),

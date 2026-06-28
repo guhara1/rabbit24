@@ -1,6 +1,7 @@
 # 수도권 핵심 역세권 페이지 (1차-C). 지역 하위에 둔다: /seoul|gyeonggi|incheon/station/<slug>/
 # 역명 기준 1개 URL(출구·노선별 분리 없음).
 from .sudogwon import P
+from .titles import make_title, make_desc
 
 # (slug, region_path, region_label, 역명, 대표 생활권)
 STATIONS = [
@@ -51,8 +52,8 @@ STATIONS = [
 PAGES = [
     P(
         f"{region_path}station/{slug}/",
-        f"{name} 출장마사지｜{areas} 역세권 홈타이 안내",
-        f"{name} 출장마사지·홈타이 예약 전 {areas} 생활권과 이용 기준을 확인하세요.",
+        make_title(name, f"{region_label} 역세권", f"{region_path}station/{slug}/"),
+        make_desc(f"{region_label} {name}", f"{region_path}station/{slug}/"),
         f"{name} 출장마사지·홈타이 안내",
         [(region_label, "/" + region_path), (name, "")],
     )

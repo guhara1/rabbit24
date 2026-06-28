@@ -1,5 +1,6 @@
 # 서울 25개 자치구 페이지 (1차-B). 본문은 content/bodies/seoul__<slug>.html 오버레이.
 from .sudogwon import P
+from .titles import make_title, make_desc
 
 # (slug, 구 이름, 대표 생활권 요약)
 SEOUL_GU = [
@@ -33,8 +34,8 @@ SEOUL_GU = [
 PAGES = [
     P(
         f"seoul/{slug}/",
-        f"{name} 출장마사지｜서울 {name} {areas} 생활권 안내",
-        f"{name} 출장마사지·홈타이 예약 전 {areas} 생활권과 이용 기준을 확인하세요.",
+        make_title(name, "서울", f"seoul/{slug}/"),
+        make_desc(f"서울 {name}", f"seoul/{slug}/"),
         f"{name} 출장마사지·홈타이 안내",
         [("서울", "/seoul/"), (name, "")],
     )

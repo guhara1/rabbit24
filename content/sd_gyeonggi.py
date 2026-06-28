@@ -1,5 +1,6 @@
 # 경기 핵심 시·군 페이지 (1차-B). 안산은 /gyeonggi/ansan/ 로 별도 운영.
 from .sudogwon import P
+from .titles import make_title, make_desc
 
 GYEONGGI_CITIES = [
     ("suwon", "수원", "수원역·광교·영통"),
@@ -30,8 +31,8 @@ GYEONGGI_CITIES = [
 PAGES = [
     P(
         f"gyeonggi/{slug}/",
-        f"{name} 출장마사지｜{name} {areas} 생활권 안내",
-        f"{name} 출장마사지·홈타이 예약 전 {areas} 생활권과 이용 기준을 확인하세요.",
+        make_title(name, "경기", f"gyeonggi/{slug}/"),
+        make_desc(f"경기 {name}", f"gyeonggi/{slug}/"),
         f"{name} 출장마사지·홈타이 안내",
         [("경기", "/gyeonggi/"), (name, "")],
     )
