@@ -94,6 +94,7 @@ _EXTRA_HEAD = f"""<script type="application/ld+json">
 </script>"""
 
 _HERO = """<div class="hero">
+  <div class="hero-inner">
   <div class="hero-content">
     <div class="hero-badge">안산시 전지역 방문 관리</div>
     <h1 class="hero-title">안산 출장마사지<br><span class="hero-accent">안산 홈타이</span><br>지역별 예약 안내</h1>
@@ -104,6 +105,10 @@ _HERO = """<div class="hero">
       <a href="/reservation/" class="btn btn-secondary">예약 안내 보기</a>
       <a href="/check/" class="btn btn-secondary">이용 전 확인사항</a>
     </div>
+  </div>
+  <div class="hero-media">
+    <img src="/assets/og-image.webp" width="1200" height="675" alt="토끼24 마사지 안산 출장마사지·홈타이 관리실" loading="eager">
+  </div>
   </div>
   <div class="hero-stats">
     <div class="stat">
