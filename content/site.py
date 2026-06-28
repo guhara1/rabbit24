@@ -1,10 +1,16 @@
 # 수도권(서울·경기·인천) 출장마사지 사이트 공통 설정
 
-BASE_URL = "https://ansan-massage1.pages.dev"
+BASE_URL = "https://rabbit24.pages.dev"
 
 BRAND = "토끼24 마사지"
 PHONE = "0508-202-4719"
 PHONE_DISPLAY = "0508-202-4719"
+
+# 검색엔진 인증 / 색인
+NAVER_SITE_VERIFICATION = "7686efd6f6dad2fa10baa85f38ef4c58e4082cf8"
+GOOGLE_SITE_VERIFICATION = ""  # GSC HTML 태그 발급 후 입력
+# IndexNow 키 — 루트에 <KEY>.txt 파일로 함께 배포된다(빙·네이버 즉시 통보용)
+INDEXNOW_KEY = "8c2f5a91e7b34d06a1f9c84d2e60b7f3"
 
 # 상단 메뉴 — 지시서 4장: 키워드 반복 없이 짧고 명확하게.
 NAV = [
