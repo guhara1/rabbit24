@@ -385,6 +385,17 @@ def render_page(page: dict) -> str:
 
     h1_html = "" if hero else f"<h1>{h1}</h1>"
 
+    # 비히어로(지역 등) 페이지 상단 대표 이미지 배너 — 전 페이지 공통
+    if hero:
+        page_media = ""
+    else:
+        alt = re.sub(r"<[^>]+>", "", h1).strip() or BRAND
+        page_media = (
+            '<div class="page-media">'
+            f'<img src="/assets/og-image.webp" width="1200" height="675" alt="{alt} 관리실" '
+            'loading="lazy" decoding="async"></div>'
+        )
+
     body, toc_items = inject_toc(body)
     toc_html = render_toc(toc_items)
     layout_cls = "page-layout has-toc" if toc_html else "page-layout"
@@ -462,6 +473,7 @@ def render_page(page: dict) -> str:
     {toc_html}
     <article class="page-content">
       {render_breadcrumb(crumbs)}
+      {page_media}
       {h1_html}
       {body}
       {longtail_html}

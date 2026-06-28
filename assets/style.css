@@ -944,6 +944,32 @@ strong {
   transform: translateY(-2px);
 }
 
+/* 지역 등 페이지 상단 대표 이미지 배너 */
+.page-media {
+  margin: 0 0 28px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--gold-ring), var(--elev-1);
+  position: relative;
+}
+
+.page-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(7, 9, 15, 0) 55%, rgba(7, 9, 15, 0.45));
+}
+
+.page-media img {
+  width: 100%;
+  height: clamp(170px, 24vw, 280px);
+  object-fit: cover;
+  object-position: center 38%;
+  display: block;
+}
+
 /* 롱테일 내부링크 컴포넌트 */
 .longtail {
   margin: 44px 0 8px;
