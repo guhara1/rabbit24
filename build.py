@@ -191,6 +191,11 @@ def make_service_schema() -> dict:
             "@type": "ServiceChannel",
             "servicePhone": {"@type": "ContactPoint", "telephone": PHONE},
         },
+        "offers": [
+            {"@type": "Offer", "name": "60분 코스", "price": "90000", "priceCurrency": "KRW"},
+            {"@type": "Offer", "name": "90분 코스", "price": "150000", "priceCurrency": "KRW"},
+            {"@type": "Offer", "name": "120분 코스", "price": "180000", "priceCurrency": "KRW"},
+        ],
     }
     if _REVIEW_COUNT:
         schema["aggregateRating"] = {
@@ -294,6 +299,34 @@ def buttonize_link_lists(body: str) -> str:
         return m.group(0)
 
     return re.sub(r"<ul>(.*?)</ul>", repl, body, flags=re.S)
+
+
+def make_price_table() -> str:
+    """코스 시간별 기본 요금표 — 전 페이지 공통 노출."""
+    return (
+        '<section class="price-table" aria-label="기본 요금">'
+        '<div class="price-head"><h2>코스 시간으로 보는 기본 요금</h2>'
+        '<p>관리 시간(60·90·120분)을 기준으로 정리한 기본 금액입니다. '
+        '표시되지 않은 별도 비용은 두지 않는 것을 원칙으로 안내합니다.</p></div>'
+        '<div class="price-cards">'
+        '<div class="price-card"><p class="price-name">60분 코스</p>'
+        '<p class="price-amount">90,000<span>원</span></p><p class="price-min">60분</p>'
+        '<p class="price-desc">핵심 부위 위주 가벼운 이완</p>'
+        f'<a class="price-cta" href="tel:{PHONE}">예약 문의</a></div>'
+        '<div class="price-card is-featured"><span class="price-badge">추천</span>'
+        '<p class="price-name">90분 코스</p>'
+        '<p class="price-amount">150,000<span>원</span></p><p class="price-min">90분</p>'
+        '<p class="price-desc">전신 균형 표준 구성·아로마 포함</p>'
+        f'<a class="price-cta" href="tel:{PHONE}">예약 문의</a></div>'
+        '<div class="price-card"><p class="price-name">120분 코스</p>'
+        '<p class="price-amount">180,000<span>원</span></p><p class="price-min">120분</p>'
+        '<p class="price-desc">구석구석 집중하는 프리미엄 구성</p>'
+        f'<a class="price-cta" href="tel:{PHONE}">예약 문의</a></div>'
+        '</div>'
+        '<p class="price-note">방문 지역과 시간대, 이동 거리에 따라 최종 금액은 통화 시 확정됩니다. '
+        '<a href="/check/transfer-fee/">요금·예약 기준 자세히 보기 →</a></p>'
+        "</section>"
+    )
 
 
 def _locality_label(page: dict) -> str:
@@ -413,12 +446,15 @@ def render_page(page: dict) -> str:
             'loading="lazy" decoding="async"></div>'
         )
 
+    # 기존 인라인 요금 블록(구버전)은 제거하고 통일된 요금표로 대체한다.
+    body = re.sub(r'<section class="pricing">.*?</section>', "", body, flags=re.S)
     body, toc_items = inject_toc(body)
     body = buttonize_link_lists(body)
     toc_html = render_toc(toc_items)
     layout_cls = "page-layout has-toc" if toc_html else "page-layout"
 
-    # 롱테일 내부링크 + 이용 후기 컴포넌트(전 페이지 공통)
+    # 요금표 + 롱테일 내부링크 + 이용 후기 컴포넌트(전 페이지 공통)
+    price_html = make_price_table()
     longtail_html = make_longtail_links(page)
     reviews_html = make_reviews_section()
 
@@ -428,16 +464,15 @@ def render_page(page: dict) -> str:
     # 나머지 페이지는 추가로 WebPage + BreadcrumbList 를 생성한다.
     # Service(후기·평점 포함)는 모든 페이지에 주입한다.
     common = [make_image_object(), make_org_schema(), make_website_schema(), make_service_schema()]
-    if hero:
-        auto_schema = "".join(_ld(b) for b in common)
-    else:
-        blocks = common + [make_webpage_schema(title, desc, canonical)]
-        if crumbs:
-            blocks.append(make_breadcrumb_schema(crumbs))
+    blocks = common + [make_webpage_schema(title, desc, canonical)]
+    if crumbs:
+        blocks.append(make_breadcrumb_schema(crumbs))
+    # 히어로 페이지(메인·안산허브)는 extra_head에 FAQPage가 이미 있어 본문 FAQ 스키마는 생략.
+    if not hero:
         faq_schema = make_faqpage_schema(body)
         if faq_schema:
             blocks.append(faq_schema)
-        auto_schema = "".join(_ld(b) for b in blocks)
+    auto_schema = "".join(_ld(b) for b in blocks)
 
     return f"""<!DOCTYPE html>
 <html lang="ko">
@@ -494,6 +529,7 @@ def render_page(page: dict) -> str:
       {page_media}
       {h1_html}
       {body}
+      {price_html}
       {longtail_html}
       {reviews_html}
     </article>
@@ -631,17 +667,27 @@ def build() -> None:
     # public 디렉터리가 없으면 생성
     os.makedirs(PUBLIC_DIR, exist_ok=True)
 
-    html_sitemap_body = make_html_sitemap(PAGES)
+    # 1차: 본문 오버레이를 먼저 적용한다.
+    for page in PAGES:
+        if page["path"] == "policy/sitemap/":
+            continue
+        ov = body_override(page["path"])
+        if ov is not None:
+            page["body"] = ov
+
+    # HTML 사이트맵은 '색인 대상 페이지'만 섹션별로 싣는다(noindex 미세동 제외).
+    indexed_pages = [
+        p for p in PAGES
+        if p["path"] and p["path"] != "policy/sitemap/"
+        and not p.get("noindex", False)
+        and text_length(p["body"]) >= MIN_INDEX_CHARS
+    ]
+    html_sitemap_body = make_html_sitemap(indexed_pages)
 
     for page in PAGES:
         path = page["path"]
-        # HTML 사이트맵 페이지는 전체 페이지 목록으로 본문을 자동 생성한다.
         if path == "policy/sitemap/":
             page["body"] = html_sitemap_body
-        # 확장 본문 파일이 있으면 인라인 본문 대신 사용한다.
-        ov = body_override(path)
-        if ov is not None:
-            page["body"] = ov
         out_dir = os.path.join(PUBLIC_DIR, path)
         os.makedirs(out_dir, exist_ok=True)
         html_out = render_page(page)

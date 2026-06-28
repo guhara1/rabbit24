@@ -944,6 +944,117 @@ strong {
   transform: translateY(-2px);
 }
 
+/* 기본 요금표 (코스 시간별) */
+.price-table {
+  margin: 48px 0 8px;
+  padding: 36px 28px 30px;
+  border-radius: 20px;
+  background:
+    radial-gradient(70% 90% at 50% -10%, rgba(212, 179, 119, 0.08), transparent 60%),
+    var(--bg-2);
+  border: 1px solid var(--line);
+  box-shadow: var(--gold-ring), var(--elev-1);
+}
+
+.price-head { text-align: center; max-width: 680px; margin: 0 auto 26px; }
+.price-head h2 { margin: 0 0 12px; padding: 0; }
+.price-head h2::before { left: 50%; transform: translateX(-50%); }
+.price-head p { color: var(--text-dim); font-size: 0.95rem; margin: 0; }
+
+.price-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.price-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 22px 24px;
+  border-radius: 16px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  transition: var(--transition);
+}
+
+.price-card.is-featured {
+  border-color: var(--gold);
+  background:
+    linear-gradient(180deg, rgba(212, 179, 119, 0.1), rgba(255, 255, 255, 0) 55%),
+    var(--panel);
+  box-shadow: var(--gold-ring), var(--elev-2);
+}
+
+.price-badge {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 18px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #2a1c08;
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  box-shadow: 0 4px 12px rgba(212, 179, 119, 0.35);
+}
+
+.price-name { font-weight: 700; color: var(--text); font-size: 1.05rem; margin: 0 0 14px; }
+
+.price-amount {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-size: 2.5rem;
+  line-height: 1;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.price-amount span { font-size: 1rem; font-weight: 700; color: var(--gold-soft); margin-left: 3px; }
+
+.price-min { color: var(--gold); font-weight: 700; font-size: 0.95rem; margin: 0 0 16px; }
+.price-desc { color: var(--text-dim); font-size: 0.92rem; margin: 0 0 22px; flex: 1 1 auto; }
+
+.price-cta {
+  display: block;
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: 11px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  transition: var(--transition);
+}
+
+.price-card.is-featured .price-cta {
+  color: #2a1c08;
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  border-color: transparent;
+}
+
+.price-cta:hover {
+  color: var(--orange-light);
+  border-color: var(--gold);
+  box-shadow: var(--gold-ring);
+  transform: translateY(-2px);
+}
+
+.price-card.is-featured .price-cta:hover { color: #2a1c08; filter: brightness(1.06); }
+
+.price-note { text-align: center; color: var(--text-dim); font-size: 0.9rem; margin: 24px 0 0; }
+.price-note a { color: var(--gold-soft); font-weight: 600; }
+
+@media (max-width: 760px) {
+  .price-cards { grid-template-columns: 1fr; gap: 14px; }
+  .price-amount { font-size: 2.2rem; }
+}
+
 /* 지역 내비게이션 버튼 그리드 (구·시·동 드릴다운) */
 .region-grid {
   list-style: none;
