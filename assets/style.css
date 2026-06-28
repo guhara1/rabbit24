@@ -913,6 +913,102 @@ strong {
   transform: translateY(-2px);
 }
 
+/* 롱테일 내부링크 컴포넌트 */
+.longtail {
+  margin: 44px 0 8px;
+  padding: 24px 26px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(212, 179, 119, 0.05), rgba(255, 255, 255, 0) 50%), var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--elev-1);
+}
+
+.longtail-head {
+  font-family: var(--serif);
+  font-weight: 800;
+  color: var(--gold-soft);
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+}
+
+.longtail-group { margin-bottom: 16px; }
+.longtail-group:last-child { margin-bottom: 0; }
+
+.longtail-title {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.03em;
+  margin-bottom: 9px;
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  transition: var(--transition);
+}
+
+.chip:hover {
+  color: var(--orange-light);
+  border-color: var(--gold);
+  box-shadow: var(--gold-ring);
+  transform: translateY(-2px);
+}
+
+/* 이용 후기 컴포넌트 */
+.reviews {
+  margin: 44px 0 8px;
+  padding: 28px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 107, 53, 0.05), rgba(255, 255, 255, 0) 45%), var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--gold-ring), var(--elev-1);
+}
+
+.reviews-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.reviews-head h2 { margin: 0; padding: 0; }
+.reviews-head h2::before { display: none; }
+
+.reviews-score { font-size: 1.02rem; color: var(--text-dim); }
+.reviews-stars { color: var(--orange-light); letter-spacing: 2px; font-size: 1.1rem; }
+.reviews-score strong { color: var(--orange-light); font-size: 1.5rem; font-weight: 900; margin-left: 6px; }
+.reviews-out, .reviews-count { color: var(--text-mute); font-size: 0.9rem; }
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.review-card {
+  margin: 0;
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+}
+
+.review-stars { color: var(--orange-primary); letter-spacing: 2px; margin-bottom: 10px; }
+.review-card blockquote { margin: 0 0 12px; color: var(--text); font-size: 0.95rem; line-height: 1.7; }
+.review-card figcaption { display: flex; flex-direction: column; gap: 2px; font-size: 0.82rem; }
+.review-author { font-weight: 700; color: var(--gold-soft); }
+.review-loc { color: var(--text-mute); }
+
 /* ── 목차 (TOC) ────────────────────── */
 .page-toc {
   display: none;

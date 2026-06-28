@@ -18,6 +18,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from content import PAGES
 from content.site import (BASE_URL, BRAND, NAV, PHONE, PHONE_DISPLAY)
+from content.reviews import REVIEWS
+
+# 후기 집계(표시 후기 = 스키마 후기 동일). 가짜 평점 금지 — 실제 후기로 교체 운영.
+_REVIEW_COUNT = len(REVIEWS)
+_REVIEW_AVG = round(sum(r["rating"] for r in REVIEWS) / _REVIEW_COUNT, 1) if _REVIEW_COUNT else 0
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 # Cloudflare Pages가 빌드를 실행하지 않고 저장소 루트를 그대로 배포하므로
@@ -171,12 +176,14 @@ def make_website_schema() -> dict:
 
 
 def make_service_schema() -> dict:
-    """Service 스키마 — 방문형 관리 서비스 제공 범위."""
+    """Service 스키마 — 방문형 관리 서비스 제공 범위 + 후기/평점.
+    후기는 페이지에 실제로 노출되는 항목과 동일하다(구글 정책 준수)."""
     base = BASE_URL.rstrip("/")
-    return {
+    schema = {
         "@context": "https://schema.org",
         "@type": "Service",
         "@id": base + "/#service",
+        "name": BRAND + " 출장마사지·홈타이",
         "serviceType": "출장마사지·홈타이 방문 관리",
         "provider": {"@id": base + "/#organization"},
         "areaServed": [{"@type": "City", "name": "서울특별시"}, {"@type": "AdministrativeArea", "name": "경기도"}, {"@type": "City", "name": "인천광역시"}],
@@ -185,6 +192,25 @@ def make_service_schema() -> dict:
             "servicePhone": {"@type": "ContactPoint", "telephone": PHONE},
         },
     }
+    if _REVIEW_COUNT:
+        schema["aggregateRating"] = {
+            "@type": "AggregateRating",
+            "ratingValue": _REVIEW_AVG,
+            "reviewCount": _REVIEW_COUNT,
+            "bestRating": 5,
+            "worstRating": 1,
+        }
+        schema["review"] = [
+            {
+                "@type": "Review",
+                "author": {"@type": "Person", "name": r["author"]},
+                "datePublished": r["date"],
+                "reviewRating": {"@type": "Rating", "ratingValue": r["rating"], "bestRating": 5, "worstRating": 1},
+                "reviewBody": r["body"],
+            }
+            for r in REVIEWS
+        ]
+    return schema
 
 
 def make_breadcrumb_schema(crumbs) -> dict:
@@ -253,6 +279,85 @@ def make_faqpage_schema(body: str):
     }
 
 
+def _locality_label(page: dict) -> str:
+    for label, href in reversed(page.get("breadcrumb") or []):
+        if label and label != "수도권":
+            return label
+    return ""
+
+
+def make_longtail_links(page: dict) -> str:
+    """페이지 지역에 맞춘 롱테일 내부링크 컴포넌트(이용 상황·예약 전 확인 조합)."""
+    path = page["path"]
+    region = path.startswith(("seoul/", "gyeonggi/", "incheon/")) and not path.startswith("gyeonggi/ansan/")
+    loc = _locality_label(page)
+    if region and loc:
+        groups = [
+            (f"{loc} 이용 상황별 안내", [
+                (f"{loc} 자택 방문 출장마사지", "/use/home/"),
+                (f"{loc} 호텔·숙소 홈타이", "/use/hotel/"),
+                (f"{loc} 오피스텔 방문 관리", "/use/officetel/"),
+                (f"{loc} 업무지구 이용 안내", "/use/business-district/"),
+                (f"{loc} 야간 예약 안내", "/use/night/"),
+            ]),
+            (f"{loc} 예약 전 확인사항", [
+                (f"{loc} 방문 주소 확인", "/check/address/"),
+                (f"{loc} 건물 출입 방식", "/check/entry/"),
+                (f"{loc} 추가 이동비 안내", "/check/transfer-fee/"),
+                (f"{loc} 예약 가능 시간", "/check/available-time/"),
+                (f"{loc} 예약 변경·취소 기준", "/check/change-policy/"),
+            ]),
+        ]
+    else:
+        groups = [
+            ("지역별 출장마사지 바로가기", [
+                ("서울 출장마사지", "/seoul/"), ("경기 출장마사지", "/gyeonggi/"),
+                ("인천 출장마사지", "/incheon/"), ("강남역 출장마사지", "/seoul/station/gangnam-station/"),
+                ("수원 출장마사지", "/gyeonggi/suwon/"), ("분당 홈타이", "/gyeonggi/life/bundang-pangyo/"),
+                ("송도 출장마사지", "/incheon/yeonsu-gu/songdo-dong/"), ("부평 출장마사지", "/incheon/bupyeong-gu/"),
+            ]),
+            ("이용 상황별 안내", [
+                ("자택 방문", "/use/home/"), ("호텔·숙소", "/use/hotel/"), ("오피스텔", "/use/officetel/"),
+                ("업무지구", "/use/business-district/"), ("야간 예약", "/use/night/"), ("외곽·공항", "/use/outer-area/"),
+            ]),
+        ]
+    parts = ['<section class="longtail" aria-label="함께 보면 좋은 안내"><p class="longtail-head">함께 보면 좋은 안내</p>']
+    for title, links in groups:
+        chips = "".join(f'<a class="chip" href="{href}">{html.escape(t)}</a>' for t, href in links)
+        parts.append(
+            f'<div class="longtail-group"><p class="longtail-title">{html.escape(title)}</p>'
+            f'<div class="chips">{chips}</div></div>'
+        )
+    parts.append("</section>")
+    return "".join(parts)
+
+
+def make_reviews_section() -> str:
+    """이용 후기 컴포넌트 — 노출 후기 = Service 스키마 review 와 동일."""
+    if not REVIEWS:
+        return ""
+    avg_round = round(_REVIEW_AVG)
+    head_stars = "★" * avg_round + "☆" * (5 - avg_round)
+    cards = []
+    for r in REVIEWS:
+        rs = "★" * r["rating"] + "☆" * (5 - r["rating"])
+        cards.append(
+            f'<figure class="review-card"><div class="review-stars" aria-label="{r["rating"]}점">{rs}</div>'
+            f'<blockquote>{html.escape(r["body"])}</blockquote>'
+            f'<figcaption><span class="review-author">{html.escape(r["author"])}</span>'
+            f'<span class="review-loc">{html.escape(r["locality"])} · {html.escape(r["date"])}</span></figcaption></figure>'
+        )
+    return (
+        '<section class="reviews" aria-label="이용 후기">'
+        '<div class="reviews-head"><h2>이용 후기</h2>'
+        f'<p class="reviews-score"><span class="reviews-stars" aria-hidden="true">{head_stars}</span> '
+        f'<strong>{_REVIEW_AVG}</strong><span class="reviews-out">/ 5</span> '
+        f'<span class="reviews-count">· 후기 {_REVIEW_COUNT}건</span></p></div>'
+        f'<div class="review-grid">{"".join(cards)}</div>'
+        "</section>"
+    )
+
+
 def render_page(page: dict) -> str:
     path = page["path"]
     title = page["title"]
@@ -284,13 +389,17 @@ def render_page(page: dict) -> str:
     toc_html = render_toc(toc_items)
     layout_cls = "page-layout has-toc" if toc_html else "page-layout"
 
+    # 롱테일 내부링크 + 이용 후기 컴포넌트(전 페이지 공통)
+    longtail_html = make_longtail_links(page)
+    reviews_html = make_reviews_section()
+
     # 스키마 자동 주입.
     # 공통: ImageObject(선호 썸네일) + Organization + WebSite 를 모든 페이지에 주입한다.
     # 메인(hero 보유)은 main.py의 extra_head에 풍부한 스키마가 이미 있으므로 공통 블록만 보강하고,
     # 나머지 페이지는 추가로 WebPage + BreadcrumbList 를 생성한다.
-    common = [make_image_object(), make_org_schema(), make_website_schema()]
+    # Service(후기·평점 포함)는 모든 페이지에 주입한다.
+    common = [make_image_object(), make_org_schema(), make_website_schema(), make_service_schema()]
     if hero:
-        common.append(make_service_schema())
         auto_schema = "".join(_ld(b) for b in common)
     else:
         blocks = common + [make_webpage_schema(title, desc, canonical)]
@@ -355,6 +464,8 @@ def render_page(page: dict) -> str:
       {render_breadcrumb(crumbs)}
       {h1_html}
       {body}
+      {longtail_html}
+      {reviews_html}
     </article>
   </div>
 </main>
