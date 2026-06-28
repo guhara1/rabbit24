@@ -126,7 +126,7 @@ def make_image_object() -> dict:
         "url": base + "/assets/og-image.webp",
         "contentUrl": base + "/assets/og-image.webp",
         "width": 1200,
-        "height": 800,
+        "height": 675,
         "encodingFormat": "image/webp",
         "caption": BRAND + " 서울·경기·인천 출장마사지·홈타이 안내",
     }
@@ -318,7 +318,7 @@ def render_page(page: dict) -> str:
 <meta property="og:image" content="{BASE_URL.rstrip('/')}/assets/og-image.webp">
 <meta property="og:image:type" content="image/webp">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="800">
+<meta property="og:image:height" content="675">
 <meta property="og:image:alt" content="{BRAND} 출장마사지·홈타이 관리실">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="{BASE_URL.rstrip('/')}/assets/og-image.webp">
