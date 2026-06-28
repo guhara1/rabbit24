@@ -279,6 +279,23 @@ def make_faqpage_schema(body: str):
     }
 
 
+_LI_LINK_RE = re.compile(r"^\s*<a href=\"[^\"]+\">[^<]+</a>\s*$")
+
+
+def buttonize_link_lists(body: str) -> str:
+    """본문의 <ul> 중 모든 <li>가 '링크 1개만' 인 목록을 버튼형 그리드로 변환한다.
+    (구·시·동 드릴다운, 인접 지역, 관련 페이지 등 내비게이션 목록 → .region-grid)
+    설명이 붙은 목록(체크리스트 등)은 변환하지 않는다."""
+    def repl(m):
+        inner = m.group(1)
+        lis = re.findall(r"<li>(.*?)</li>", inner, flags=re.S)
+        if len(lis) >= 3 and all(_LI_LINK_RE.match(li) for li in lis):
+            return '<ul class="region-grid">' + inner + "</ul>"
+        return m.group(0)
+
+    return re.sub(r"<ul>(.*?)</ul>", repl, body, flags=re.S)
+
+
 def _locality_label(page: dict) -> str:
     for label, href in reversed(page.get("breadcrumb") or []):
         if label and label != "수도권":
@@ -397,6 +414,7 @@ def render_page(page: dict) -> str:
         )
 
     body, toc_items = inject_toc(body)
+    body = buttonize_link_lists(body)
     toc_html = render_toc(toc_items)
     layout_cls = "page-layout has-toc" if toc_html else "page-layout"
 

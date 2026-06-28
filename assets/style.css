@@ -944,6 +944,51 @@ strong {
   transform: translateY(-2px);
 }
 
+/* 지역 내비게이션 버튼 그리드 (구·시·동 드릴다운) */
+.region-grid {
+  list-style: none;
+  margin: 18px 0 26px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 10px;
+}
+
+.region-grid li { margin: 0; }
+
+.region-grid a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 50px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 60%),
+    var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  transition: var(--transition);
+}
+
+.region-grid a:hover {
+  color: var(--orange-light);
+  border-color: var(--gold);
+  background: var(--panel);
+  box-shadow: var(--gold-ring), var(--elev-1);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .region-grid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+  .region-grid a { min-height: 46px; font-size: 0.88rem; }
+}
+
 /* 지역 등 페이지 상단 대표 이미지 배너 */
 .page-media {
   margin: 0 0 28px;
