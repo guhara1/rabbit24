@@ -51,7 +51,7 @@ _org_schema = {
     "name": BRAND,
     "telephone": PHONE,
     "url": _BASE + "/",
-    "image": _BASE + "/assets/og-image.png",
+    "image": _BASE + "/assets/og-image.webp",
     "description": "안산시 출장마사지·홈타이 안내 사이트",
     "areaServed": {
         "@type": "AdministrativeArea",

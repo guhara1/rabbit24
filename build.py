@@ -123,10 +123,11 @@ def make_image_object() -> dict:
     return {
         "@type": "ImageObject",
         "@id": base + "/#primaryimage",
-        "url": base + "/assets/og-image.png",
-        "contentUrl": base + "/assets/og-image.png",
+        "url": base + "/assets/og-image.webp",
+        "contentUrl": base + "/assets/og-image.webp",
         "width": 1200,
-        "height": 630,
+        "height": 800,
+        "encodingFormat": "image/webp",
         "caption": BRAND + " 서울·경기·인천 출장마사지·홈타이 안내",
     }
 
@@ -314,11 +315,13 @@ def render_page(page: dict) -> str:
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canonical}">
 <meta property="og:site_name" content="{BRAND}">
-<meta property="og:image" content="{BASE_URL.rstrip('/')}/assets/og-image.png">
+<meta property="og:image" content="{BASE_URL.rstrip('/')}/assets/og-image.webp">
+<meta property="og:image:type" content="image/webp">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image:height" content="800">
+<meta property="og:image:alt" content="{BRAND} 출장마사지·홈타이 관리실">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="{BASE_URL.rstrip('/')}/assets/og-image.png">
+<meta name="twitter:image" content="{BASE_URL.rstrip('/')}/assets/og-image.webp">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg?v=2">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=2">
 <link rel="icon" href="/favicon.ico?v=2" sizes="48x48">
