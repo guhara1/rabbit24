@@ -50,6 +50,7 @@ _MAIN_EXTRA_HEAD = (
 )
 
 _MAIN_HERO = """<div class="hero">
+  <div class="hero-inner">
   <div class="hero-content">
     <div class="hero-badge">서울 · 경기 · 인천 수도권 방문 관리</div>
     <h1 class="hero-title">서울·경기·인천 출장마사지<br><span class="hero-accent">수도권 홈타이</span><br>지역 선택 안내</h1>
@@ -62,6 +63,10 @@ _MAIN_HERO = """<div class="hero">
       <a href="/incheon/" class="btn btn-secondary">인천 보기</a>
       <a href="/check/" class="btn btn-secondary">예약 전 확인</a>
     </div>
+  </div>
+  <div class="hero-media">
+    <img src="/assets/og-image.webp" width="1200" height="675" alt="토끼24 마사지 서울·경기·인천 출장마사지·홈타이 관리실" loading="eager" fetchpriority="high">
+  </div>
   </div>
   <div class="hero-stats">
     <div class="stat"><div class="stat-number">3</div><div class="stat-label">서울·경기·인천</div></div>

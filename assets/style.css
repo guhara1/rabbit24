@@ -262,6 +262,37 @@ a:hover { color: var(--orange-primary); }
 
 .hero-content { max-width: 820px; margin: 0 auto; position: relative; }
 
+/* 히어로 2단(텍스트 + 우측 이미지) */
+.hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  max-width: 1140px;
+  margin: 0 auto 44px;
+  text-align: left;
+  position: relative;
+}
+
+.hero-inner .hero-content { max-width: none; margin: 0; flex: 1 1 52%; }
+.hero-inner .hero-cta { justify-content: flex-start; margin-bottom: 0; }
+
+.hero-media { flex: 1 1 44%; min-width: 0; }
+
+.hero-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 18px;
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--gold-ring), var(--elev-2);
+}
+
+@media (max-width: 900px) {
+  .hero-inner { flex-direction: column; text-align: center; gap: 28px; }
+  .hero-inner .hero-content { flex-basis: auto; }
+  .hero-inner .hero-cta { justify-content: center; }
+}
+
 .hero-badge {
   display: inline-block;
   font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
