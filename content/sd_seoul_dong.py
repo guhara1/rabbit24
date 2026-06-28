@@ -16,6 +16,13 @@ SEOUL_DONG = [
     ("seongdong-gu", "성동구", "seongsu-dong", "성수동", "성수·서울숲"),
     ("mapo-gu", "마포구", "seogyo-dong", "서교동", "홍대·합정"),
     ("gangseo-gu", "강서구", "magok-dong", "마곡동", "마곡·발산"),
+    # 2차 확장
+    ("gangnam-gu", "강남구", "apgujeong-dong", "압구정동", "압구정·로데오"),
+    ("gangnam-gu", "강남구", "daechi-dong", "대치동", "대치·학원가"),
+    ("gangnam-gu", "강남구", "nonhyeon-dong", "논현동", "논현·학동"),
+    ("songpa-gu", "송파구", "munjeong-dong", "문정동", "문정·법조단지"),
+    ("gangseo-gu", "강서구", "hwagok-dong", "화곡동", "화곡·까치산"),
+    ("mapo-gu", "마포구", "mangwon-dong", "망원동", "망원·망리단길"),
 ]
 
 PAGES = [

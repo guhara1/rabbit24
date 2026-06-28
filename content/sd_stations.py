@@ -39,6 +39,13 @@ STATIONS = [
     ("dongincheon-station", "incheon/", "인천", "동인천역", "동인천·신포·원도심"),
     ("incheon-nonhyeon-station", "incheon/", "인천", "인천논현역", "논현·소래·남동"),
     ("geomam-station", "incheon/", "인천", "검암역", "검암·청라·서구"),
+    # 3차 확장
+    ("seolleung-station", "seoul/", "서울", "선릉역", "선릉·역삼·테헤란로"),
+    ("gangbyeon-station", "seoul/", "서울", "강변역", "강변·구의·동서울"),
+    ("migeum-station", "gyeonggi/", "경기", "미금역", "미금·분당·정자"),
+    ("giheung-station", "gyeonggi/", "경기", "기흥역", "기흥·신갈·동백"),
+    ("moran-station", "gyeonggi/", "경기", "모란역", "모란·성남·중원"),
+    ("central-park-station", "incheon/", "인천", "센트럴파크역", "송도·센트럴파크"),
 ]
 
 PAGES = [
