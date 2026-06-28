@@ -4,7 +4,7 @@ import re
 from . import (main, areas, stations, areas_and_stations, info, hubs,
                sudogwon, sd_seoul, sd_gyeonggi, sd_incheon, sd_stations,
                sd_gyeonggi_gu, sd_incheon_reform,
-               sd_gyeonggi_dong, sd_incheon_dong, admin)
+               admin, admin_incheon, admin_gyeonggi)
 
 # 안산 확장 본문은 수도권 본문과 슬러그가 겹치지 않도록 bodies/ansan/ 에 둔다.
 _BODIES = os.path.join(os.path.dirname(__file__), "bodies", "ansan")
@@ -77,7 +77,7 @@ PAGES = (
     + sd_gyeonggi_gu.PAGES
     + sd_incheon_reform.PAGES
     + admin.PAGES
-    + sd_gyeonggi_dong.PAGES
-    + sd_incheon_dong.PAGES
+    + admin_incheon.PAGES
+    + admin_gyeonggi.PAGES
     + [_rehome(p) for p in _ansan_pages]
 )
