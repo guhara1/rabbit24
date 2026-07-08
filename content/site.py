@@ -1,6 +1,6 @@
 # 수도권(서울·경기·인천) 출장마사지 사이트 공통 설정
 
-BASE_URL = "https://rabbit24.pages.dev"
+BASE_URL = "https://runningrabbit24.com"
 
 BRAND = "토끼24 마사지"
 PHONE = "0508-202-4719"

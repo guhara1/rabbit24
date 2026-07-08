@@ -465,7 +465,7 @@ support = create_info_page(
 <h2>기타 연락 방법</h2>
 <ul>
 <li><strong>텔레그램</strong>: <a href="https://t.me/googleseolab">@googleseolab</a></li>
-<li><strong>웹사이트</strong>: rabbit24.pages.dev</li>
+<li><strong>웹사이트</strong>: runningrabbit24.com</li>
 </ul>
 </section>
 
